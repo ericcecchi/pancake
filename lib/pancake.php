@@ -1,7 +1,5 @@
 <?php
 
-require('parser.php');
-
 class Pancake {
 
 	public function __construct() {

@@ -24,7 +24,7 @@ function slugify($slug) {
 function build_path($title,$type=null,$category=null) {
 
 	$filename = slugify($title) . '.md';
-	$dir = '../content/';
+	$dir = CONTENT_DIR;
 	if ($type) $dir .= slugify($type) . '/';
 	if ($category) $dir .= slugify($category) . '/';
 
@@ -48,6 +48,9 @@ function parse_flat($path) {
 				if (array_key_exists(0, $arr) && array_key_exists(1, $arr)) $meta[trim($arr[0])] = trim($arr[1]);
 				$line = fgets($file);
 			}
+		}
+		else {
+			$content .= $line;
 		}
 
 		while (!feof($file)) {
@@ -73,7 +76,7 @@ function save_post($post) {
 	}
 
 	$filename = slugify($post['title']) . '.md';
-	$dir = '../content/';
+	$dir = CONTENT_DIR;
 	if (array_key_exists('type', $post)) $dir .= slugify($post['type']) . '/';
 	if (array_key_exists('category', $post)) $dir .= slugify($post['category']) . '/';
 	if (!(is_dir($dir))) mkdir($dir, 0777, true);
