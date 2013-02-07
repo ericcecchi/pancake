@@ -1,6 +1,6 @@
 <?php
 
-require('parser.php')
+require('parser.php');
 
 // Fake a POST
 // $_POST = [
@@ -12,5 +12,3 @@ require('parser.php')
 // ];
 
 save_post($_POST);
-
-?>

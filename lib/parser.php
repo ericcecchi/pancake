@@ -1,5 +1,7 @@
 <?php
 
+require '../config.php';
+
 // Development
 ini_set('display_errors', 'On');
 error_reporting(E_ALL | E_STRICT);
@@ -81,7 +83,5 @@ function save_post($post) {
 	if (array_key_exists('category', $post)) $dir .= slugify($post['category']) . '/';
 	if (!(is_dir($dir))) mkdir($dir, 0777, true);
 
-	return file_put_contents($dir . $filename, "/*\n" . $meta . "*/\n\n" . $content); // /content/type/category/title.md
+	return file_put_contents($dir . $filename, "---\n" . $meta . "---\n\n" . $content); // /content/type/category/title.md
 }
-
-?>
