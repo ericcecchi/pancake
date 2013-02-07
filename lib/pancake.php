@@ -23,7 +23,6 @@ class Pancake {
 		$defaults = array(
 			'site_title' => 'Pancake',
 			'base_url' => $this->base_url(),
-			'theme' => 'default',
 			'enable_cache' => false
 		);
 
@@ -55,12 +54,28 @@ class Pancake {
 		else $file = CONTENT_DIR .'index';
 
 		// Load the file
-		if(is_dir($file)) $file = CONTENT_DIR . $this->url .'/index.md';
-		else $file .= '.md';
+		if(is_dir($file)) {
+			if ($file = opendir($file)) {
+				$items = array();
+				while (false !== ($entry = readdir($file))) {
+					if (preg_match('/(\.md)$/', $entry)  && $entry != "index.md") {
+						$title = preg_replace('/(\.md)$/', '', $entry);
+						$items[ucwords($title)] = '/'.$this->url.'/'.$title;
+					}
+				}
+				closedir($file);
+			}
+			$file = CONTENT_DIR . $this->url .'/index.md';
+		}
+		else {
+			$file .= '.md';
+			$items = array();
+		}
 
 		if(file_exists($file)) $result = parse_flat($file);
 		else $result = parse_flat(CONTENT_DIR .'404.md');
 
+		$this->items = $items;
 		$this->meta = $result['meta'];
 		$this->content =  Markdown($result['content']);
 	}
@@ -69,11 +84,10 @@ class Pancake {
 		$env = array('autoescape' => false);
 		if($this->settings['enable_cache']) $env['cache'] = CACHE_DIR;
 		
-		Twig_Autoloader::register();
-		$loader = new Twig_Loader_Filesystem(THEMES_DIR . $this->settings['theme']);
+		$loader = new Twig_Loader_Filesystem(LAYOUT_DIR);
 		$twig = new Twig_Environment($loader, $env);
 
-		if (array_key_exists('type', $this->meta) && file_exists(THEMES_DIR.'/'.$this->settings['theme'].'/'.slugify($this->meta['type']).'.html')) {
+		if (array_key_exists('type', $this->meta) && file_exists(LAYOUT_DIR.'/'.slugify($this->meta['type']).'.html')) {
 			$template = slugify($this->meta['type']).'.html';
 		}
 		else {
@@ -81,14 +95,15 @@ class Pancake {
 		}
 
 		echo $twig->render($template, array(
-			'config' => $this->settings,
+			'settings' => $this->settings,
 			'base_dir' => rtrim(ROOT_DIR, '/'),
 			'base_url' => $this->settings['base_url'],
-			'theme_dir' => THEMES_DIR . $this->settings['theme'],
-			'theme_url' => $this->settings['base_url'] .'/'. basename(THEMES_DIR) .'/'. $this->settings['theme'],
+			'layout_dir' => LAYOUT_DIR,
+			'layout_url' => '/'. basename(LAYOUT_DIR),
 			'site_title' => $this->settings['site_title'],
 			'meta' => $this->meta,
-			'content' => $this->content
+			'content' => $this->content,
+			'items' => $this->items
 		));
 	}
 }
