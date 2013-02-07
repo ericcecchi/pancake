@@ -55,12 +55,23 @@ class Pancake {
 
 		// Load the file
 		if(is_dir($file)) {
+			// If it's an index, load the items
 			if ($file = opendir($file)) {
 				$items = array();
 				while (false !== ($entry = readdir($file))) {
 					if (preg_match('/(\.md)$/', $entry)  && $entry != "index.md") {
-						$title = preg_replace('/(\.md)$/', '', $entry);
-						$items[ucwords($title)] = '/'.$this->url.'/'.$title;
+						$entryfile = CONTENT_DIR . '/'.$this->url.'/'. $entry;
+						if(file_exists($entryfile)) {
+							$result = parse_flat($entryfile);
+							if ($result) {
+								$title = preg_replace('/(\.md)$/', '', $entry);
+								$items[] = array(
+										'url' => '/'.$this->url.'/'.$title,
+										'meta' => $result['meta'],
+										'content' => Markdown($result['content'])
+									);
+							}
+						}
 					}
 				}
 				closedir($file);
@@ -87,6 +98,7 @@ class Pancake {
 		$loader = new Twig_Loader_Filesystem(LAYOUT_DIR);
 		$twig = new Twig_Environment($loader, $env);
 
+		// Look for /layout/type.html
 		if (array_key_exists('type', $this->meta) && file_exists(LAYOUT_DIR.'/'.slugify($this->meta['type']).'.html')) {
 			$template = slugify($this->meta['type']).'.html';
 		}

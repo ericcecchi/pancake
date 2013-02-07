@@ -1,9 +1,7 @@
 ---
 title: Posts
 description: This is the index.
-type: Posts Index
+type: Index
 ---
-
-# Posts
 
 This is the index.

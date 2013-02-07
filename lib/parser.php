@@ -1,6 +1,6 @@
 <?php
 
-require '../config.php';
+require(__DIR__.'/../config.php');
 
 // Development
 ini_set('display_errors', 'On');
