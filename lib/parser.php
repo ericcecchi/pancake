@@ -69,19 +69,21 @@ function parse_flat($path) {
 }
 
 function save_post($post) {
-	$meta = '';
-	$content = $post['content'];
+	if ($post) {
+		$meta = '';
+		$content = $post['content'];
 
-	foreach ($post as $key => $value) {
-		if ($key == 'content') continue;
-		$meta .= $key . ': ' . $value . "\n"; // key: value
+		foreach ($post as $key => $value) {
+			if ($key == 'content') continue;
+			$meta .= $key . ': ' . $value . "\n"; // key: value
+		}
+
+		$filename = slugify($post['title']) . '.md';
+		$dir = CONTENT_DIR;
+		if (array_key_exists('type', $post)) $dir .= slugify($post['type']) . '/';
+		if (array_key_exists('category', $post)) $dir .= slugify($post['category']) . '/';
+		if (!(is_dir($dir))) mkdir($dir, 0777, true);
+
+		return file_put_contents($dir . $filename, "---\n" . $meta . "---\n\n" . $content); // /content/type/category/title.md
 	}
-
-	$filename = slugify($post['title']) . '.md';
-	$dir = CONTENT_DIR;
-	if (array_key_exists('type', $post)) $dir .= slugify($post['type']) . '/';
-	if (array_key_exists('category', $post)) $dir .= slugify($post['category']) . '/';
-	if (!(is_dir($dir))) mkdir($dir, 0777, true);
-
-	return file_put_contents($dir . $filename, "---\n" . $meta . "---\n\n" . $content); // /content/type/category/title.md
 }

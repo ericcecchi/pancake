@@ -1,26 +1,26 @@
 {% extends "main.html" %}
 
 {% block content %}
-{% if meta.date %}
-<div class="jumbotron">
-	<img src="{{ meta.attachment }}" >
-	<h2>{{ meta.date|date("F jS \\a\\t g:ia") }}</h2>
-</div>
-{% endif %}
-
 <div class="row-fluid">
 	<div class="span12">
+		<header class="page-header">
 			<h1>{{ meta.title }}</h1>
-			{{ content }}
+		</header>
+		{{ content }}
 
-			{% for item in items %}
-			<article>
-				<h3><a href="{{ item.url }}">{{ item.meta.title }}</a></h3>
-				{{ item.content }}
-			</article>
-			{% else %}
-				<p>No posts found.</p>
-			{% endfor %}
+		{% for item in items %}
+		<article class="post">
+			<header>
+				<h3>
+					<a href="{{ item.url }}">{{ item.meta.title }}</a>
+					{% if item.meta.date %} <small>{{ item.meta.date|date("F jS\, Y") }}</small>{% endif %}
+				</h3>
+			</header>
+			{{ item.content }}
+		</article>
+		{% else %}
+			<p>No posts found.</p>
+		{% endfor %}
 	</div>
 </div>
 {% endblock %}
