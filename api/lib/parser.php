@@ -1,11 +1,5 @@
 <?php
 
-require(__DIR__.'/../config.php');
-
-// Development
-ini_set('display_errors', 'On');
-error_reporting(E_ALL | E_STRICT);
-
 function slugify($slug) {
 	// everything to lower and no spaces begin or end
 	$slug = strtolower(trim($slug));
@@ -23,22 +17,12 @@ function slugify($slug) {
 	return $slug; 
 }
 
-function build_path($title,$type=null,$category=null) {
-
-	$filename = slugify($title) . '.md';
-	$dir = CONTENT_DIR;
-	if ($type) $dir .= slugify($type) . '/';
-	if ($category) $dir .= slugify($category) . '/';
-
-	return $dir . $filename;
-}
-
-function parse_flat($path) {
+function parse_flat($path,$params=array()) {
 	// Returns an array with keys 'meta' (array) and 'content' (string) or false
 	if (file_exists($path)) {
 		$file = fopen($path, 'r');
 
-		$meta = array();
+		$yaml = '';
 		$content = '';
 		$line = fgets($file);
 
@@ -46,22 +30,36 @@ function parse_flat($path) {
 			$line = fgets($file);
 
 			while ((!preg_match('/^[ \t\/*#@-]*$/', $line) | $line == "\n") && !feof($file)) {
-				$arr = explode(': ', $line);
-				if (array_key_exists(0, $arr) && array_key_exists(1, $arr)) $meta[trim($arr[0])] = trim($arr[1]);
+				$yaml .= $line;
 				$line = fgets($file);
 			}
 		}
 		else {
-			$content .= $line;
+			if ($params['content'] != 'false') {
+				$content .= $line;
+			}
 		}
 
-		while (!feof($file)) {
-			$content .= fgets($file);
+		if ($params['content'] != 'false') {
+			while (!feof($file)) {
+				$content .= fgets($file);
+			}
+			$content = Markdown(Smartypants($content));
 		}
 
 		fclose($file);
 
-		return array('meta'=>$meta, 'content'=>$content);
+		$meta = Spyc::YAMLLoad($yaml);
+
+		foreach ($meta as $key => $value) {
+			if ((!in_array($key, $params['with']) && $params['with'] != array()) | in_array($key, $params['without'])) unset($meta[$key]);
+		}
+
+		$meta['url'] = '/'.preg_replace('/(\.md)$/', '', str_replace(CONTENT_DIR, '', realpath($path)));
+		$slug = explode('/', $meta['url']);
+		$meta['slug'] = preg_replace('/(\.md)$/', '', end($slug));
+
+		return array('meta'=> $meta, 'content'=> $content);
 	}
 	else {
 		return false;
