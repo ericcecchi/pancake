@@ -1,4 +1,4 @@
- # Pancake
+# Pancake
 
 A tasty flat-file CMS backend
 
