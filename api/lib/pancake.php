@@ -20,6 +20,7 @@ class Pancake {
 			'without' => array(),
 			'content' => 'true',
 			'items' => 'true',
+			'sort' => 'date',
 		);
 
 		foreach($defaults as $key=>$val){
@@ -108,6 +109,14 @@ class Pancake {
 			}
 		}
 		closedir($dir);
+
+		usort($items, function($a, $b) {
+			$sort = $this->params['sort'];
+			if (array_key_exists($sort, $b['meta']) && array_key_exists($sort, $a['meta'])) {
+				return ($b['meta'][$sort] < $a['meta'][$sort]) ? -1 : 1;
+			}
+		});
+
 		return $items;
 	}
 
