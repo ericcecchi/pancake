@@ -22,7 +22,7 @@ A tasty flat-file CMS backend
 
 ### Optional parameters
 
-`content=(true|false)`
-`items=(true|false)`
-`with=(all|comma separated list of metadata fields)`
-`without=(none|comma separated list of metadata fields)`
+`content=(true|false)`  
+`items=(true|false)`  
+`with=(all|comma separated list of metadata fields)`  
+`without=(none|comma separated list of metadata fields)`  
