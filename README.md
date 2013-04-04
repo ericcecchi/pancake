@@ -26,3 +26,4 @@ A tasty flat-file CMS backend
 `items=(true|false)`
 `with=(all|comma separated list of metadata fields)`
 `without=(none|comma separated list of metadata fields)`
+`sort=(date|fieldName)`
