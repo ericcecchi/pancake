@@ -1,20 +1,9 @@
- # Pancake
+# Pancake
 
 A tasty flat-file CMS backend
 
 ## What you can do with it
 
-<<<<<<< HEAD
-### Version 0.2
-
-- Post creation form (no validation)
-- Index of posts
-- Simplified templating
-
-### Version 0.1
-
-Initial alpha release. The backend and templating works, no frontend yet.
-=======
 1. Create a folder called `content` in your app root.
 2. Place the `api` folder in your app root.
 3. Make some Markdowns.
@@ -37,4 +26,3 @@ Initial alpha release. The backend and templating works, no frontend yet.
 `items=(true|false)`
 `with=(all|comma separated list of metadata fields)`
 `without=(none|comma separated list of metadata fields)`
->>>>>>> api
