@@ -22,8 +22,11 @@ A tasty flat-file CMS backend
 
 ### Optional parameters
 
-`content=(true|false)`  
-`items=(true|false)`  
-`with=(all|comma separated list of metadata fields)`  
-`without=(none|comma separated list of metadata fields)`  
-`sort=(date|fieldName)`  
+Values are list as (default|accepted).
+
+`content=(true|false)`
+`items=(true|false)`
+`with=(all|comma separated list of metadata fields)`
+`without=(none|comma separated list of metadata fields)`
+`sort=(date|fieldName)`
+`order=(asc|desc)`

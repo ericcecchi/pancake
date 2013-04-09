@@ -51,13 +51,13 @@ function parse_flat($path,$params=array()) {
 
 		$meta = Spyc::YAMLLoad($yaml);
 
-		foreach ($meta as $key => $value) {
-			if ((!in_array($key, $params['with']) && $params['with'] != array()) | in_array($key, $params['without'])) unset($meta[$key]);
-		}
-
 		$meta['url'] = '/'.preg_replace('/(\.md)$/', '', str_replace(CONTENT_DIR, '', realpath($path)));
 		$slug = explode('/', $meta['url']);
 		$meta['slug'] = preg_replace('/(\.md)$/', '', end($slug));
+
+		foreach ($meta as $key => $value) {
+			if ((!in_array($key, $params['with']) && $params['with'] != array()) | in_array($key, $params['without'])) unset($meta[$key]);
+		}
 
 		return array('meta'=> $meta, 'content'=> $content);
 	}

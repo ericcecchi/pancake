@@ -11,9 +11,4 @@ require('parser.php');
 // 		'key' => 'value'
 // ];
 
-if (save_post($_POST)) {
-	header("Location: /posts");
-}
-else {
-	header("Location: /create");
-}
+save_post($_POST);

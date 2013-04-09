@@ -21,6 +21,7 @@ class Pancake {
 			'content' => 'true',
 			'items' => 'true',
 			'sort' => 'date',
+			'order' => 'asc',
 		);
 
 		foreach($defaults as $key=>$val){
@@ -112,8 +113,10 @@ class Pancake {
 
 		usort($items, function($a, $b) {
 			$sort = $this->params['sort'];
+			$order = $this->params['order'];
 			if (array_key_exists($sort, $b['meta']) && array_key_exists($sort, $a['meta'])) {
-				return ($b['meta'][$sort] < $a['meta'][$sort]) ? -1 : 1;
+				if ($order == 'asc') return ($b['meta'][$sort] > $a['meta'][$sort]) ? -1 : 1;
+				else return ($b['meta'][$sort] < $a['meta'][$sort]) ? -1 : 1;
 			}
 		});
 
